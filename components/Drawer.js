@@ -1,4 +1,8 @@
+import { useRouter } from "next/navigation";
+
 const Drawer = () => {
+  const router = useRouter(); // Initialize useRouter hook
+
   return (
     <>
       <div className="drawer">
@@ -13,7 +17,7 @@ const Drawer = () => {
           <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
             {/* Sidebar content */}
             <li>
-              <a>Leaderboard</a>
+              <a onClick={() => router.push("/leaderboard")}>Leaderboard</a>
             </li>
             <li>
               <a>Unsolved</a>

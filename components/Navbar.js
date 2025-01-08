@@ -1,8 +1,17 @@
 "use client";
 import { useState } from "react";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
+
+  const router = useRouter(); // Initialize useRouter hook
+
+  const handleButtonClick = (path) => {
+    router.push(path); // Redirect to the new page
+  };
 
   return (
     <div className="navbar bg-base-100">
@@ -35,7 +44,12 @@ const Navbar = () => {
       </label>
 
       <div className="flex-none">
-        <a className="btn btn-ghost text-xl">WitsCTF</a>
+        <a
+          onClick={() => handleButtonClick("/")}
+          className="btn btn-ghost text-xl"
+        >
+          WitsCTF
+        </a>
       </div>
       <div className="form-control flex-1">
         <input
@@ -54,7 +68,10 @@ const Navbar = () => {
             <div className="w-10 rounded-full">
               <img
                 alt="Tailwind CSS Navbar component"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                src={
+                  session?.user?.profilePic ||
+                  "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                }
               />
             </div>
           </div>
@@ -63,16 +80,19 @@ const Navbar = () => {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
             <li>
-              <a className="justify-between">
+              <a
+                onClick={() => handleButtonClick("/profile")}
+                className="justify-between"
+              >
                 Profile
-                <span className="badge">New</span>
+                {/* <span className="badge">New</span> */}
               </a>
             </li>
-            <li>
+            {/* <li>
               <a>Settings</a>
-            </li>
+            </li> */}
             <li>
-              <a>Logout</a>
+              <a onClick={() => signOut({ callbackUrl: "/login" })}>Logout</a>
             </li>
           </ul>
         </div>

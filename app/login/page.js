@@ -1,4 +1,23 @@
+"use client";
+import { signIn, useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 const Login = () => {
+  const handleGoogleSignIn = () => {
+    signIn("google"); // Triggers Google sign-in
+  };
+
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session) {
+      // Redirect to home after successful login
+      router.push("/");
+    }
+  }, [session, router]);
+
   return (
     <div className="h-screen w-screen flex justify-center items-center">
       {/* Modal */}
@@ -10,7 +29,10 @@ const Login = () => {
             </h1>
 
             <div className="mt-10 flex justify-center">
-              <button className="group h-14 px-8 border-2 border-gray-300 rounded-full transition duration-300 hover:border-blue-400  active:bg-blue-100">
+              <button
+                onClick={handleGoogleSignIn}
+                className="group h-14 px-8 border-2 border-gray-300 rounded-full transition duration-300 hover:border-blue-400  active:bg-blue-100"
+              >
                 <div className="flex items-center space-x-4">
                   <img
                     src="https://www.svgrepo.com/show/475656/google-color.svg"

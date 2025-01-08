@@ -1,17 +1,33 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 export default function Profile() {
-  const [hackerName, setHackerName] = useState("Thups");
+  const { data: session, status } = useSession();
+  const [hackerName, setHackerName] = useState("");
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    if (session) {
+      setHackerName(session.user.hackername || ""); // Set the hackername from the session data
+      setLoading(false); // Stop loading when session data is available
+    }
+  }, [session]);
   const handleNameChange = (event) => {
     setHackerName(event.target.value);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // Logic for saving the profile data can be added here
+    // You can call an API to update the user's profile in the database
+
     alert("Profile Saved!");
   };
+
+  // If session data is still loading or if no user is signed in
+  if (status === "loading" || !session) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
@@ -19,7 +35,10 @@ export default function Profile() {
       <div className="flex flex-col items-center space-y-4">
         {/* Profile Picture */}
         <img
-          src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+          src={
+            session.user.profilePic ||
+            "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+          }
           alt="Profile"
           className="w-32 h-32 rounded-full object-cover border-4 border-primary"
         />
@@ -33,10 +52,21 @@ export default function Profile() {
         {/* Profile Info */}
         <div className="flex gap-8">
           <div>
-            <p className="text-lg font-semibold">Muthuphei Mukhunyeledzi</p>
-            <p className="text-lg font-semibold">Points: 1,000</p>
-            <p className="text-lg font-semibold">Rank: Silver</p>
-            <p className="text-lg font-semibold">Days active: Silver</p>
+            <p className="text-lg font-semibold">{session.user.name}</p>
+            <p className="text-lg font-semibold">
+              Points: {session.user.points || 0}
+            </p>
+            <p className="text-lg font-semibold">
+              Rank: {session.user.rank || "Silver"}
+            </p>
+            <p className="text-lg font-semibold">
+              Days active:{" "}
+              {session.user.accountAge
+                ? (new Date() - new Date(session.user.accountAge)) /
+                  (1000 * 3600 * 24)
+                : 0}{" "}
+              days
+            </p>
           </div>
         </div>
       </div>
@@ -80,7 +110,7 @@ export default function Profile() {
           />
           <p className="font-semibold">Hacker of the Year: 2024</p>
         </div>
-        <div className="flex flex-col items-center  p-4 rounded-lg shadow">
+        <div className="flex flex-col items-center p-4 rounded-lg shadow">
           <img
             src="/globe.svg"
             alt="Award 2"

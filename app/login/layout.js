@@ -19,8 +19,8 @@ export const metadata = {
 // app/login/layout.tsx
 export default function LoginLayout({ children }) {
   return (
-    <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
       {children}
-    </body>
+    </div>
   );
 }
