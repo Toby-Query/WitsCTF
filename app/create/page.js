@@ -1,7 +1,13 @@
 "use client";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const Create = () => {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [formData, setFormData] = useState({
     problemName: "",
     tag: "",
@@ -20,6 +26,34 @@ const Create = () => {
     "Reverse Engineering",
   ];
 
+  useEffect(() => {
+    if (status === "loading") return; // Wait until session is loaded
+    if (!session) {
+      router.push("/"); // Redirect if not logged in
+      return;
+    }
+
+    // Fetch the user's profile role from your profile API
+    const fetchUserRole = async () => {
+      try {
+        const res = await fetch("/api/profile");
+        if (!res.ok) throw new Error("Failed to fetch profile data");
+
+        const profile = await res.json();
+        if (profile.role === "admin") {
+          setIsAuthorized(true);
+        } else {
+          router.push("/"); // Redirect non-admin users to home page
+        }
+      } catch (error) {
+        console.error("Error fetching user role:", error);
+        router.push("/"); // Redirect on error
+      }
+    };
+
+    fetchUserRole();
+  }, [router, session, status]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -28,18 +62,35 @@ const Create = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted", formData);
-    // You can send the form data to the server or handle it as needed.
+    try {
+      const res = await fetch("/api/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok)
+        throw new Error("Failed to create problem" + (await res.text()));
+
+      const data = await res.json();
+      console.log("Problem created:", data);
+      // Optionally reset the form or navigate to another page
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
+
+  if (!isAuthorized) return null; // Optionally render a loading state
 
   return (
     <div className="container mx-auto p-8">
       <h1 className="text-3xl font-bold mb-8 text-center">
         Create a New Problem
       </h1>
-
       <form onSubmit={handleSubmit} className="space-y-6 max-w-xl mx-auto">
         {/* Problem Name */}
         <div className="form-control">
@@ -57,7 +108,6 @@ const Create = () => {
             required
           />
         </div>
-
         {/* Tag Dropdown */}
         <div className="form-control">
           <label htmlFor="tag" className="label">
@@ -79,7 +129,6 @@ const Create = () => {
             ))}
           </select>
         </div>
-
         {/* Author */}
         <div className="form-control">
           <label htmlFor="author" className="label">
@@ -96,7 +145,6 @@ const Create = () => {
             required
           />
         </div>
-
         {/* Description */}
         <div className="form-control">
           <label htmlFor="description" className="label">
@@ -112,7 +160,6 @@ const Create = () => {
             required
           ></textarea>
         </div>
-
         {/* Link */}
         <div className="form-control">
           <label htmlFor="link" className="label">
@@ -128,7 +175,6 @@ const Create = () => {
             placeholder="Enter a link for the problem (optional)"
           />
         </div>
-
         {/* Answer */}
         <div className="form-control">
           <label htmlFor="answer" className="label">
@@ -145,7 +191,6 @@ const Create = () => {
             required
           />
         </div>
-
         {/* Points */}
         <div className="form-control">
           <label htmlFor="points" className="label">
@@ -162,7 +207,6 @@ const Create = () => {
             required
           />
         </div>
-
         {/* Submit Button */}
         <div className="form-control">
           <button type="submit" className="btn btn-primary w-full">

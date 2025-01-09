@@ -17,8 +17,6 @@ export async function GET(request) {
       return new Response("User not found", { status: 404 });
     }
 
-    console.log(user);
-
     return new Response(JSON.stringify(user), {
       status: 200,
       headers: { "Content-Type": "application/json" },
