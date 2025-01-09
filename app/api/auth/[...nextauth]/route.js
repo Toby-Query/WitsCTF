@@ -19,19 +19,23 @@ const handler = NextAuth({
         .findOne({ googleId: profile.sub });
 
       if (!user) {
-        // If user doesn't exist, create a new entry
-        const hackername = profile.email.split("@")[0]; // Extract hackername from email
+        // Calculate the rank of the new user based on the current number of users
+        const totalUsers = await db.collection("users").countDocuments();
+
+        const hackerName = profile.email.split("@")[0]; // Extract hackername from email
         const result = await db.collection("users").insertOne({
           googleId: profile.sub,
           name: profile.name,
           profilePic: profile.picture,
-          hackername,
+          hackerName,
           points: 0, // Starting points
-          rank: "Silver", // Default rank
+          rank: totalUsers + 1, // Rank is total users + 1
           accountAge: new Date(), // Current date as account creation date
           school: "Computer Science", // Default school
           level: "Undergraduate", // Default level
           awards: [], // Empty list of awards
+          email: profile.email,
+          role: "user",
         });
 
         profile.id = result.insertedId.toString(); // Store new user ID in profile
@@ -67,7 +71,7 @@ const handler = NextAuth({
         // Attach user data to session
         session.user.id = dbUser._id.toString(); // Store MongoDB ID as string in session
         session.user.role = dbUser.role;
-        session.user.hackername = dbUser.hackername; // Add hackername if needed
+        session.user.hackerName = dbUser.hackerName; // Add hackername if needed
         session.user.profilePic = dbUser.profilePic; // Add profile picture if needed
         session.user.school = dbUser.school; // Attach school to session
         session.user.level = dbUser.level; // Attach level to session
