@@ -1,16 +1,75 @@
-const CtfModal = () => {
+import { useEffect, useState } from "react";
+
+const CtfModal = ({ problem }) => {
+  const [flag, setFlag] = useState("");
+  const [notification, setNotification] = useState("");
+  const [userEmail, setUserEmail] = useState(null);
+
+  // Fetch user email from the /api/profile endpoint
+  useEffect(() => {
+    const fetchUserEmail = async () => {
+      try {
+        const response = await fetch("/api/profile");
+        if (response.ok) {
+          const data = await response.json();
+          setUserEmail(data.email);
+        } else {
+          setNotification("Unable to fetch user details.");
+        }
+      } catch (error) {
+        console.error("Error fetching user email:", error);
+        setNotification("Error fetching user details.");
+      }
+    };
+
+    fetchUserEmail();
+  }, []);
+
+  const submitFlag = async () => {
+    if (!problem) {
+      setNotification("No problem selected");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/submit-flag", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          problemName: problem.problemName,
+          submittedFlag: flag,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setNotification("🎉 Correct flag! Points updated.");
+      } else {
+        setNotification(data.message || "Something went wrong.");
+      }
+    } catch (error) {
+      console.error("Error submitting flag:", error);
+      setNotification("Error submitting flag. Try again later.");
+    }
+  };
+
+  if (!problem) return null;
+
   return (
     <>
       <input type="checkbox" id="my_modal_7" className="modal-toggle" />
       <div className="modal" role="dialog">
         <div className="modal-box relative">
-          {/* First Row: Tag, Number of Solves, and Close Button */}
+          {/* Problem details */}
           <div className="flex items-center justify-between mb-4">
             <span className="text-sm font-medium text-gray-600">
-              Tag: Web Exploit
+              Tag: {problem.tag}
             </span>
             <span className="text-sm font-medium text-gray-600">
-              Solves: 42
+              Solves: {problem.solves || 0}
             </span>
             <label
               htmlFor="my_modal_7"
@@ -33,46 +92,50 @@ const CtfModal = () => {
             </label>
           </div>
 
-          {/* Second Row: Problem Name */}
           <h3 className="text-xl font-semibold mb-4">
-            Problem Name: Web Exploit
+            Problem Name: {problem.problemName}
           </h3>
-
-          {/* Third Row: Problem Author */}
           <div className="mb-4">
-            <span className="font-medium text-gray-600">Author: John Doe</span>
+            <span className="font-medium text-gray-600">
+              Author: {problem.author}
+            </span>
           </div>
-
-          {/* Fourth Row: Problem Description */}
           <div className="mb-4">
-            <p className="text-gray-700">
-              This is a web exploit problem where you need to find a
-              vulnerability in a website. Your task is to exploit this
-              vulnerability and capture the flag.
-            </p>
+            <p className="text-gray-700">{problem.description}</p>
           </div>
+          {problem.link && (
+            <div className="mb-4">
+              <a
+                href={problem.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline"
+              >
+                Problem Link: Click here for more details
+              </a>
+            </div>
+          )}
 
-          {/* Fifth Row: Link */}
-          <div className="mb-4">
-            <a
-              href="https://example.com/problem-details"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 underline"
-            >
-              Problem Link: Click here for more details
-            </a>
-          </div>
-
-          {/* Final Row: Flag Input and Submit Button */}
+          {/* Flag submission */}
           <div className="flex flex-col gap-4">
             <input
               type="text"
+              value={flag}
+              onChange={(e) => setFlag(e.target.value)}
               placeholder="Enter Flag"
               className="input input-bordered w-full"
             />
-            <button className="btn btn-primary w-full">Submit Flag</button>
+            <button className="btn btn-primary w-full" onClick={submitFlag}>
+              Submit Flag
+            </button>
           </div>
+
+          {/* Notification */}
+          {notification && (
+            <div className="mt-4 text-center text-sm font-medium">
+              {notification}
+            </div>
+          )}
         </div>
         <label className="modal-backdrop" htmlFor="my_modal_7">
           Close

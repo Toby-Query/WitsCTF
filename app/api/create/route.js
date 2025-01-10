@@ -32,7 +32,7 @@ export async function POST(request) {
       author,
       description,
       link = "",
-      answer,
+      flag,
       points,
     } = body;
 
@@ -42,7 +42,7 @@ export async function POST(request) {
       !tag ||
       !author ||
       !description ||
-      !answer ||
+      !flag ||
       points === undefined
     ) {
       return new Response("Missing required fields", { status: 400 });
@@ -62,7 +62,7 @@ export async function POST(request) {
       author,
       description,
       link,
-      answer,
+      flag,
       points,
       createdAt: new Date(),
       updatedAt: new Date(),

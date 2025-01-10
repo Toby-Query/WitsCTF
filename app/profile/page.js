@@ -73,7 +73,7 @@ export default function Profile() {
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       <div className="flex flex-col items-center space-y-4">
         <img
-          src={profileData?.profilePic || "/default-profile.jpg"}
+          src={profileData?.profilePic}
           alt="Profile"
           className="w-32 h-32 rounded-full object-cover border-4 border-primary"
         />

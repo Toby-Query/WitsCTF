@@ -34,6 +34,7 @@ const handler = NextAuth({
           school: "Computer Science", // Default school
           level: "Undergraduate", // Default level
           awards: [], // Empty list of awards
+          solved: [], // Empty list of solved problems
           email: profile.email,
           role: "user",
         });
