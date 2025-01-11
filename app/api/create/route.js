@@ -45,6 +45,7 @@ export async function POST(request) {
       !flag ||
       points === undefined
     ) {
+      console.log("Missing required fields:", body);
       return new Response("Missing required fields", { status: 400 });
     }
 
@@ -53,6 +54,7 @@ export async function POST(request) {
 
     // Ensure points are a positive integer
     if (!Number.isInteger(points) || points < 0) {
+      console.log("Invalid points:", points);
       return new Response("Points must be a positive integer", { status: 400 });
     }
     // Construct the new problem document
@@ -66,6 +68,7 @@ export async function POST(request) {
       points,
       createdAt: new Date(),
       updatedAt: new Date(),
+      solves: 0,
     };
 
     // Insert the new problem into the database

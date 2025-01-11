@@ -14,7 +14,7 @@ const Create = () => {
     author: "",
     description: "",
     link: "",
-    answer: "",
+    flag: "",
     points: "",
   });
 
@@ -178,13 +178,13 @@ const Create = () => {
         {/* Answer */}
         <div className="form-control">
           <label htmlFor="answer" className="label">
-            <span className="label-text">Answer</span>
+            <span className="label-text">Flag</span>
           </label>
           <input
             type="text"
-            id="answer"
-            name="answer"
-            value={formData.answer}
+            id="flag"
+            name="flag"
+            value={formData.flag}
             onChange={handleInputChange}
             className="input input-bordered w-full"
             placeholder="Enter the answer for the problem"
