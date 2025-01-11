@@ -18,7 +18,7 @@ export default function ClientLayout({ children }) {
           {children}
         </SearchProvider>
       ) : (
-        { children } // Render children as-is for login page
+        children // Render children as-is for login page
       )}
     </>
   );

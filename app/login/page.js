@@ -2,6 +2,8 @@
 import { signIn, useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import React from "react";
+import Image from "next/image";
 
 const Login = () => {
   const handleGoogleSignIn = () => {

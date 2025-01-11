@@ -3,6 +3,7 @@ import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 import { useSearch } from "@/app/context/SearchContext";
+import Image from "next/image";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
