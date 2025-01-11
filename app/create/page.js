@@ -20,8 +20,8 @@ const Create = () => {
 
   const tags = [
     "Web Exploit",
-    "Crypto Challenge",
-    "Forensics Task",
+    "Cryptography",
+    "Forensics",
     "Binary Exploit",
     "Reverse Engineering",
   ];

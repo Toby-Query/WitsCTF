@@ -77,6 +77,8 @@ const handler = NextAuth({
         session.user.school = dbUser.school; // Attach school to session
         session.user.level = dbUser.level; // Attach level to session
         session.user.awards = dbUser.awards; // Attach awards to session
+        session.user.solved = dbUser.solved; // Attach solved problems to session
+        session.user.role = dbUser.role; // Attach user role to session
       }
 
       return session;

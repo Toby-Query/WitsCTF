@@ -1,7 +1,11 @@
 import { useRouter } from "next/navigation";
 
-const Drawer = () => {
+const Drawer = ({ onFilterChange }) => {
   const router = useRouter(); // Initialize useRouter hook
+
+  const handleFilterChange = (filter) => {
+    onFilterChange(filter); // Call the passed function with the new filter
+  };
 
   return (
     <>
@@ -20,40 +24,36 @@ const Drawer = () => {
               <a onClick={() => router.push("/leaderboard")}>Leaderboard</a>
             </li>
             <li>
-              <a>Unsolved</a>
+              <a onClick={() => handleFilterChange("unsolved")}>Unsolved</a>
             </li>
             <li>
-              <a>Solved</a>
+              <a onClick={() => handleFilterChange("solved")}>Solved</a>
             </li>
             <li>
-              <a>All</a>
+              <a onClick={() => handleFilterChange("all")}>All</a>
             </li>
             <li>
-              <a>Cryptography</a>
+              <a onClick={() => handleFilterChange("Cryptography")}>
+                Cryptography
+              </a>
             </li>
             <li>
-              <a>Reverse Engineering</a>
+              <a onClick={() => handleFilterChange("Reverse Engineering")}>
+                Reverse Engineering
+              </a>
             </li>
             <li>
-              <a>Forensics</a>
+              <a onClick={() => handleFilterChange("Forensics")}>Forensics</a>
             </li>
             <li>
-              <a>Web Exploitation</a>
+              <a onClick={() => handleFilterChange("Web Exploit")}>
+                Web Exploit
+              </a>
             </li>
             <li>
-              <a>Steganography</a>
-            </li>
-            <li>
-              <a>Network</a>
-            </li>
-            <li>
-              <a>Miscellaneous</a>
-            </li>
-            <li>
-              <a>OSINT</a>
-            </li>
-            <li>
-              <a>Machines</a>
+              <a onClick={() => handleFilterChange("Binary Exploit")}>
+                Binary Exploit
+              </a>
             </li>
           </ul>
         </div>

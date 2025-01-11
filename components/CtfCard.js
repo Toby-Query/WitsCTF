@@ -1,12 +1,19 @@
-const CtfCard = ({ title, points }) => {
+const CtfCard = ({ title, points, solved }) => {
+  // alert("solved: " + solved);
   return (
-    <div className="card bg-base-100 w-96 shadow-xl">
+    <div
+      className={`card w-96 shadow-xl ${
+        solved ? "bg-green-500" : "bg-base-100"
+      }`}
+    >
       <div className="card-body">
         <h2 className="card-title">{title}</h2>
         <p>{points}</p>
-        {/* <div class="card-actions justify-end">
-          <button class="btn btn-primary">Buy Now</button>
-        </div> */}
+        {solved && (
+          <span className="badge badge-success absolute top-2 right-2">
+            Solved
+          </span>
+        )}
       </div>
     </div>
   );
