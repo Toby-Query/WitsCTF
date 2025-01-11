@@ -64,11 +64,11 @@ const CtfModal = ({ problem }) => {
       <div className="modal" role="dialog">
         <div className="modal-box relative">
           {/* Problem details */}
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-sm font-medium text-gray-600">
-              Tag: {problem.tag}
-            </span>
-            <span className="text-sm font-medium text-gray-600">
+          <div className="flex items-center justify-around mb-4">
+            <div className="text-sm font-medium text-gray-600 badge badge-accent">
+              {problem.tag}
+            </div>
+            <span className="text-sm font-medium text-gray-600 badge badge-secondary">
               Solves: {problem.solves || 0}
             </span>
             <label
@@ -92,8 +92,8 @@ const CtfModal = ({ problem }) => {
             </label>
           </div>
 
-          <h3 className="text-xl font-semibold mb-4">
-            Problem Name: {problem.problemName}
+          <h3 className="text-xl font-semibold mb-4 flex items-center justify-center w-full">
+            {problem.problemName}
           </h3>
           <div className="mb-4">
             <span className="font-medium text-gray-600">
@@ -101,7 +101,7 @@ const CtfModal = ({ problem }) => {
             </span>
           </div>
           <div className="mb-4">
-            <p className="text-gray-700">{problem.description}</p>
+            <p className="text-gray-300">{problem.description}</p>
           </div>
           {problem.link && (
             <div className="mb-4">

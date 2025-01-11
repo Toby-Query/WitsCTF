@@ -16,7 +16,7 @@ export default function Home() {
   // const [searchQuery, setSearchQuery] = useState(""); // Search query state
   const { searchQuery, onSearchChange } = useSearch(); // Use search query from context
 
-  console.log("give ", searchQuery);
+  // console.log("give ", searchQuery);
 
   useEffect(() => {
     const fetchProblems = async () => {

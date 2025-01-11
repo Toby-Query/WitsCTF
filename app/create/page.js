@@ -77,7 +77,7 @@ const Create = () => {
         throw new Error("Failed to create problem" + (await res.text()));
 
       const data = await res.json();
-      console.log("Problem created:", data);
+      // console.log("Problem created:", data);
       // Optionally reset the form or navigate to another page
     } catch (error) {
       console.error("Error submitting form:", error);
