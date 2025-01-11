@@ -6,8 +6,11 @@ export async function GET() {
     // Connect to the database
     const { db } = await connectToDatabase();
 
-    // Fetch all problems from the "problems" collection
-    const problems = await db.collection("problems").find({}).toArray();
+    // Fetch all problems from the "problems" collection without the "flag" field
+    const problems = await db
+      .collection("problems")
+      .find({}, { projection: { flag: 0 } })
+      .toArray();
 
     // Return the fetched problems as JSON
     return NextResponse.json(problems, { status: 200 });

@@ -57,6 +57,20 @@ export async function POST(request) {
       console.log("Invalid points:", points);
       return new Response("Points must be a positive integer", { status: 400 });
     }
+
+    // Check if a problem with the same name already exists
+    const existingProblem = await db
+      .collection("problems")
+      .findOne({ problemName });
+    if (existingProblem) {
+      return new Response(
+        JSON.stringify({
+          message: "A problem with this name already exists",
+        }),
+        { status: 409, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     // Construct the new problem document
     const newProblem = {
       problemName,
