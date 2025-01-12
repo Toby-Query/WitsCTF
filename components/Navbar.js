@@ -3,10 +3,11 @@ import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 import { useSearch } from "@/app/context/SearchContext";
-import Image from "next/image";
+import { useDrawer } from "@/app/context/DrawerContext";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, setIsOpen } = useDrawer();
   const { data: session } = useSession();
   const router = useRouter(); // Initialize useRouter hook
   const pathname = usePathname();
@@ -34,7 +35,10 @@ const Navbar = () => {
         <label
           htmlFor="my-drawer"
           className="btn btn-circle drawer-button"
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => {
+            setIsOpen(!isOpen);
+            console.log("isOpen", isOpen);
+          }}
         >
           {isOpen ? (
             <svg
