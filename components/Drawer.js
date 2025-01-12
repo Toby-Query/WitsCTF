@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { useDrawer } from "@/app/context/DrawerContext";
+import { useDrawer } from "@/context/DrawerContext";
 
 const Drawer = ({ onFilterChange }) => {
   const router = useRouter(); // Initialize useRouter hook

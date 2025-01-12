@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
-import { useSearch } from "@/app/context/SearchContext";
-import { useDrawer } from "@/app/context/DrawerContext";
+import { useSearch } from "@/context/SearchContext";
+import { useDrawer } from "@/context/DrawerContext";
 
 const Navbar = () => {
   // const [isOpen, setIsOpen] = useState(false);

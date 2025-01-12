@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react"; // To access user session
 import CtfCard from "@/components/CtfCard";
 import CtfModal from "@/components/CtfModal";
 import Drawer from "@/components/Drawer";
-import { useSearch } from "./context/SearchContext";
+import { useSearch } from "../context/SearchContext";
 
 export default function Home() {
   const { data: session } = useSession(); // Access session data
