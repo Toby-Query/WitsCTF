@@ -6,7 +6,7 @@ const CtfCard = ({ title, points, solved }) => {
         solved ? "bg-green-500" : "bg-base-100"
       }`}
     >
-      <div className="card-body">
+      <div className="card-body flex justify-center items-center">
         <h2 className="card-title">{title}</h2>
         <p>{points}</p>
         {solved && (

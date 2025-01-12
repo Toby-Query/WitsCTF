@@ -14,33 +14,35 @@ export default function Home() {
   const [selectedProblem, setSelectedProblem] = useState(null);
   const [filter, setFilter] = useState("all"); // Default filter
   // const [searchQuery, setSearchQuery] = useState(""); // Search query state
-  const { searchQuery, onSearchChange } = useSearch(); // Use search query from context
+  const { searchQuery } = useSearch(); // Use search query from context
 
   // console.log("give ", searchQuery);
 
-  useEffect(() => {
-    const fetchProblems = async () => {
-      try {
-        const response = await fetch("/api/problems");
-        if (!response.ok) {
-          throw new Error("Failed to fetch problems");
-        }
-        const data = await response.json();
-
-        // Attach solved status based on user's session
-        const solvedProblems = session?.user?.solved || [];
-        const enrichedData = data.map((problem) => ({
-          ...problem,
-          solved: solvedProblems.includes(problem.problemName), // Mark as solved if in user's solved list
-        }));
-
-        setCtfData(enrichedData);
-        setFilteredData(enrichedData); // Initialize filtered data
-      } catch (error) {
-        console.error("Error fetching problems:", error);
+  const fetchProblems = async () => {
+    try {
+      const response = await fetch("/api/problems");
+      if (!response.ok) {
+        throw new Error("Failed to fetch problems");
       }
-    };
+      const data = await response.json();
 
+      // Attach solved status based on user's session
+      const solvedProblems = session?.user?.solved || [];
+      const enrichedData = data.map((problem) => ({
+        ...problem,
+        solved: solvedProblems.includes(problem.problemName), // Mark as solved if in user's solved list
+      }));
+
+      console.log("enrichedData", enrichedData);
+
+      setCtfData(enrichedData);
+      setFilteredData(enrichedData); // Initialize filtered data
+    } catch (error) {
+      console.error("Error fetching problems:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchProblems();
   }, [session]);
 
@@ -71,10 +73,6 @@ export default function Home() {
     setFilteredData(filtered); // Update filtered data
   }, [filter, ctfData, searchQuery]); // Trigger filter when filter or search query changes
 
-  // const handleSearchChange = (query) => {
-  //   setSearchQuery(query); // Update search query state
-  // };
-
   return (
     <>
       <div className="p-8 sm:p-16">
@@ -99,7 +97,7 @@ export default function Home() {
           ))}
         </div>
 
-        <CtfModal problem={selectedProblem} />
+        <CtfModal problem={selectedProblem} refreshData={fetchProblems} />
       </div>
       <Drawer onFilterChange={setFilter} />
     </>

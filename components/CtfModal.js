@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const CtfModal = ({ problem }) => {
+const CtfModal = ({ problem, refreshData }) => {
   const [flag, setFlag] = useState("");
   const [notification, setNotification] = useState("");
   const [userEmail, setUserEmail] = useState(null);
@@ -47,6 +47,7 @@ const CtfModal = ({ problem }) => {
 
       if (response.ok) {
         setNotification("🎉 Correct flag! Points updated.");
+        refreshData(); // Refresh the data
       } else {
         setNotification(data.message || "Something went wrong.");
       }

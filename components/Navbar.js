@@ -11,6 +11,7 @@ const Navbar = () => {
   const router = useRouter(); // Initialize useRouter hook
   const pathname = usePathname();
   const isHome = pathname === "/"; // Check if the current page is the home page
+  const isLeaderboard = pathname === "/leaderboard"; // Check if the current page is the leaderboard page
   const { searchQuery, onSearchChange } = useSearch(); // Use search query from
 
   // alert(pathname);
@@ -68,7 +69,7 @@ const Navbar = () => {
         </a>
       </div>
       <div className="form-control flex-1">
-        {isHome && (
+        {(isHome || isLeaderboard) && (
           <input
             type="text"
             placeholder="Search"

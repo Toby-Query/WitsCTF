@@ -1,8 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useSearch } from "../context/SearchContext";
 
 const LeaderBoard = () => {
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]); // Store filtered users
+
+  const { searchQuery } = useSearch();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -11,6 +15,7 @@ const LeaderBoard = () => {
         if (!res.ok) throw new Error("Failed to fetch users");
         const data = await res.json();
         setUsers(data);
+        setFilteredUsers(data); // Initially, set filtered users to all users
       } catch (error) {
         console.error("Error fetching users:", error.message);
       }
@@ -18,6 +23,14 @@ const LeaderBoard = () => {
 
     fetchUsers();
   }, []);
+
+  // Filter users based on the search query (case-insensitive)
+  useEffect(() => {
+    const filtered = users.filter((user) =>
+      user.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredUsers(filtered); // Update filtered users based on search query
+  }, [searchQuery, users]); // Re-run filter when searchQuery or users change
 
   return (
     <div className="overflow-x-auto">
@@ -31,7 +44,7 @@ const LeaderBoard = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user, index) => (
+          {filteredUsers.map((user, index) => (
             <tr key={user._id}>
               <td>{index + 1}</td>
               <td>{user.hackerName}</td>

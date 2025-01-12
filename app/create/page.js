@@ -17,6 +17,8 @@ const Create = () => {
     flag: "",
     points: "",
   });
+  const [feedback, setFeedback] = useState(""); // Feedback state
+  const [isSubmitting, setIsSubmitting] = useState(false); // Submission state
 
   const tags = [
     "Web Exploit",
@@ -64,6 +66,8 @@ const Create = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setFeedback(""); // Clear any previous feedback
     try {
       const res = await fetch("/api/create", {
         method: "POST",
@@ -73,14 +77,23 @@ const Create = () => {
         body: JSON.stringify(formData),
       });
 
-      if (!res.ok)
-        throw new Error("Failed to create problem" + (await res.text()));
+      const data = await res.json(); // Parse the response JSON
+      if (!res.ok) throw new Error(data.message || "Failed to create problem");
 
-      const data = await res.json();
-      // console.log("Problem created:", data);
-      // Optionally reset the form or navigate to another page
+      setFeedback("Problem created successfully!");
+      setFormData({
+        problemName: "",
+        tag: "",
+        author: "",
+        description: "",
+        link: "",
+        flag: "",
+        points: "",
+      }); // Reset the form
     } catch (error) {
-      console.error("Error submitting form:", error);
+      setFeedback(`Error: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -177,7 +190,7 @@ const Create = () => {
         </div>
         {/* Answer */}
         <div className="form-control">
-          <label htmlFor="answer" className="label">
+          <label htmlFor="flag" className="label">
             <span className="label-text">Flag</span>
           </label>
           <input
@@ -191,7 +204,7 @@ const Create = () => {
             required
           />
         </div>
-        {/* Points */}
+        {/* Points
         <div className="form-control">
           <label htmlFor="points" className="label">
             <span className="label-text">Points</span>
@@ -206,14 +219,30 @@ const Create = () => {
             placeholder="Enter the number of points"
             required
           />
-        </div>
+        </div> */}
         {/* Submit Button */}
         <div className="form-control">
-          <button type="submit" className="btn btn-primary w-full">
-            Create Problem
+          <button
+            type="submit"
+            className={`btn btn-primary w-full ${
+              isSubmitting ? "loading" : ""
+            }`}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Submitting..." : "Create Problem"}
           </button>
         </div>
       </form>
+      {/* Feedback Message */}
+      {feedback && (
+        <div
+          className={`mt-4 text-center ${
+            feedback.startsWith("Error") ? "text-red-500" : "text-green-500"
+          }`}
+        >
+          {feedback}
+        </div>
+      )}
     </div>
   );
 };

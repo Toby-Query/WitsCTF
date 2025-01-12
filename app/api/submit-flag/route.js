@@ -62,67 +62,57 @@ export async function POST(request) {
 
     // Increment the solves count for the problem
     const updatedSolves = (problem.solves || 0) + 1;
-    await problemsCollection.updateOne(
-      { problemName },
-      { $set: { solves: updatedSolves } }
-    );
-
-    // Calculate the new score for the problem
     const usersCount = await usersCollection.countDocuments();
     const dynamicScore = Math.max(
       0,
       ((usersCount - updatedSolves) / usersCount) * 500
     );
 
-    // Add the problem to the user's solved list
-    const updatedSolved = new Set([...(user.solved || []), problemName]);
-    await usersCollection.updateOne(
-      { email: userEmail },
-      { $set: { solved: Array.from(updatedSolved) } }
+    // Update the problem's solves count and points
+    await problemsCollection.updateOne(
+      { problemName },
+      { $set: { solves: updatedSolves, points: dynamicScore } }
     );
 
-    // Recalculate scores and ranks for all users
-    const allUsers = await usersCollection.find({}).toArray();
-    const userScores = [];
+    // Add the problem to the user's solved list
+    const updatedSolved = new Set([...(user.solved || []), problemName]);
 
-    for (const u of allUsers) {
-      const solvedProblems = u.solved || [];
-      let totalScore = 0;
+    // Recalculate the user's total points from scratch
+    let totalPoints = 0;
 
-      for (const solvedProblem of solvedProblems) {
-        const prob = await problemsCollection.findOne({
-          problemName: solvedProblem,
-        });
-        if (prob) {
-          const probScore = Math.max(
-            0,
-            ((usersCount - prob.solves) / usersCount) * 500
-          );
-          totalScore += probScore;
-        }
+    for (const solvedProblemName of updatedSolved) {
+      const solvedProblem = await problemsCollection.findOne({
+        problemName: solvedProblemName,
+      });
+      if (solvedProblem?.points) {
+        totalPoints += solvedProblem.points;
       }
-
-      // Update the user's score and collect their total score for ranking
-      await usersCollection.updateOne(
-        { email: u.email },
-        { $set: { points: totalScore } }
-      );
-      userScores.push({ email: u.email, points: totalScore });
     }
 
-    // Sort users by points in descending order and assign ranks
-    userScores.sort((a, b) => b.points - a.points);
+    // Update the user's solved list and points
+    await usersCollection.updateOne(
+      { email: userEmail },
+      { $set: { solved: Array.from(updatedSolved), points: totalPoints } }
+    );
 
-    for (let rank = 0; rank < userScores.length; rank++) {
+    // Recalculate ranks for all users
+    const allUsers = await usersCollection
+      .find({}, { projection: { email: 1, points: 1 } })
+      .toArray();
+
+    // Sort users by points in descending order and assign ranks
+    allUsers.sort((a, b) => b.points - a.points);
+
+    for (let rank = 0; rank < allUsers.length; rank++) {
       await usersCollection.updateOne(
-        { email: userScores[rank].email },
+        { email: allUsers[rank].email },
         { $set: { rank: rank + 1 } }
       );
     }
 
     return new Response(
       JSON.stringify({
-        message: `Flag correct! Problem score and user ranks updated.`,
+        message: `Flag correct! Problem points and user ranks updated.`,
       }),
       { status: 200 }
     );

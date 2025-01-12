@@ -26,37 +26,22 @@ export async function POST(request) {
 
     // Parse the incoming request body
     const body = await request.json();
-    let {
-      problemName,
-      tag,
-      author,
-      description,
-      link = "",
-      flag,
-      points,
-    } = body;
+    let { problemName, tag, author, description, link = "", flag } = body;
 
     // Validate required fields
-    if (
-      !problemName ||
-      !tag ||
-      !author ||
-      !description ||
-      !flag ||
-      points === undefined
-    ) {
+    if (!problemName || !tag || !author || !description || !flag) {
       console.log("Missing required fields:", body);
       return new Response("Missing required fields", { status: 400 });
     }
 
     // Convert points to integer
-    points = parseInt(points, 10);
+    // points = parseInt(points, 10);
 
-    // Ensure points are a positive integer
-    if (!Number.isInteger(points) || points < 0) {
-      console.log("Invalid points:", points);
-      return new Response("Points must be a positive integer", { status: 400 });
-    }
+    // // Ensure points are a positive integer
+    // if (!Number.isInteger(points) || points < 0) {
+    //   console.log("Invalid points:", points);
+    //   return new Response("Points must be a positive integer", { status: 400 });
+    // }
 
     // Check if a problem with the same name already exists
     const existingProblem = await db
@@ -83,6 +68,7 @@ export async function POST(request) {
       createdAt: new Date(),
       updatedAt: new Date(),
       solves: 0,
+      points: 500,
     };
 
     // Insert the new problem into the database
