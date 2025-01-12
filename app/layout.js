@@ -3,6 +3,8 @@ import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
 import ClientLayout from "./client-layout";
 import React from "react";
+import Head from "next/head";
+import { Analytics } from "@vercel/analytics/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,16 +23,15 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <React.StrictMode>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <AuthProvider>
-            <ClientLayout>{children}</ClientLayout>
-          </AuthProvider>
-        </body>
-      </html>
-    </React.StrictMode>
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <AuthProvider>
+          <ClientLayout>{children}</ClientLayout>
+        </AuthProvider>
+        <Analytics />
+      </body>
+    </html>
   );
 }

@@ -49,7 +49,7 @@ const LeaderBoard = () => {
               <td>{index + 1}</td>
               <td>{user.hackerName}</td>
               <td>{user.name}</td>
-              <td>{user.points}</td>
+              <td>{Math.round(user.points)}</td>
             </tr>
           ))}
         </tbody>

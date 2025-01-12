@@ -89,7 +89,7 @@ export default function Profile() {
           <div>
             <p className="text-lg font-semibold">{profileData?.name}</p>
             <p className="text-lg font-semibold">
-              Points: {profileData?.points || 0}
+              Points: {Math.round(profileData?.points || 0)}
             </p>
             <p className="text-lg font-semibold">
               Rank: {profileData?.rank || "Silver"}

@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { connectToDatabase } from "@/lib/mongodb"; // Assuming this is your MongoDB connection function
+import { connectToDatabase } from "@/lib/mongodb";
 
 const handler = NextAuth({
   providers: [
@@ -12,6 +12,17 @@ const handler = NextAuth({
   callbacks: {
     async signIn({ profile }) {
       const { db } = await connectToDatabase();
+
+      // Check if the email ends with @students.wits.ac.za
+      const email = profile.email.toLowerCase();
+      if (!email.endsWith("@students.wits.ac.za")) {
+        // Check if the email already exists in the database
+        const existingUser = await db.collection("users").findOne({ email });
+        if (!existingUser) {
+          // Reject registration for new emails that don't meet the domain rule
+          return false; // User registration is blocked
+        }
+      }
 
       // Check if the user already exists
       const user = await db
@@ -40,6 +51,9 @@ const handler = NextAuth({
         });
 
         profile.id = result.insertedId.toString(); // Store new user ID in profile
+
+        // Recalculate problem points and user points after new user registration
+        await recalculatePoints(db);
       } else {
         // If user exists, store their existing MongoDB ID
         profile.id = user._id.toString();
@@ -85,5 +99,62 @@ const handler = NextAuth({
     },
   },
 });
+
+async function recalculatePoints(db) {
+  // Step 1: Recalculate Problem Points
+  const problemsCollection = db.collection("problems");
+  const usersCollection = db.collection("users");
+
+  const problems = await problemsCollection.find().toArray();
+  const users = await usersCollection.find().toArray();
+
+  const usersCount = users.length;
+
+  for (const problem of problems) {
+    const updatedSolves = problem.solves || 0;
+    const dynamicScore = Math.max(
+      0,
+      ((usersCount - updatedSolves) / usersCount) * 500
+    );
+
+    await problemsCollection.updateOne(
+      { problemName: problem.problemName },
+      { $set: { points: dynamicScore } }
+    );
+  }
+
+  // Step 2: Recalculate User Points
+  for (const user of users) {
+    let totalPoints = 0;
+    for (const solvedProblemName of user.solved) {
+      const solvedProblem = await problemsCollection.findOne({
+        problemName: solvedProblemName,
+      });
+      if (solvedProblem?.points) {
+        totalPoints += solvedProblem.points;
+      }
+    }
+
+    await usersCollection.updateOne(
+      { email: user.email },
+      { $set: { points: totalPoints } }
+    );
+  }
+
+  // Step 3: Recalculate User Ranks
+  const allUsers = await usersCollection
+    .find({}, { projection: { email: 1, points: 1 } })
+    .toArray();
+
+  // Sort users by points in descending order and assign ranks
+  allUsers.sort((a, b) => b.points - a.points);
+
+  for (let rank = 0; rank < allUsers.length; rank++) {
+    await usersCollection.updateOne(
+      { email: allUsers[rank].email },
+      { $set: { rank: rank + 1 } }
+    );
+  }
+}
 
 export { handler as GET, handler as POST };

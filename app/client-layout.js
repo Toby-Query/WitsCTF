@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import { useState } from "react";
 import React from "react";
 import { SearchProvider } from "../context/SearchContext";
 import { DrawerProvider } from "../context/DrawerContext";
