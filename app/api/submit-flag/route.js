@@ -95,17 +95,45 @@ export async function POST(request) {
       { $set: { solved: Array.from(updatedSolved), points: totalPoints } }
     );
 
-    // Recalculate ranks for all users
+    // Recalculate points for all users who have solved any problem
     const allUsers = await usersCollection
+      .find(
+        { solved: { $exists: true, $not: { $size: 0 } } },
+        { projection: { email: 1, solved: 1 } }
+      )
+      .toArray();
+
+    // Loop through all users who have solved problems and recalculate their points
+    for (const user of allUsers) {
+      let userPoints = 0;
+
+      for (const solvedProblemName of user.solved) {
+        const solvedProblem = await problemsCollection.findOne({
+          problemName: solvedProblemName,
+        });
+        if (solvedProblem?.points) {
+          userPoints += solvedProblem.points;
+        }
+      }
+
+      // Update the user's total points
+      await usersCollection.updateOne(
+        { email: user.email },
+        { $set: { points: userPoints } }
+      );
+    }
+
+    // Recalculate ranks for all users
+    const updatedUsers = await usersCollection
       .find({}, { projection: { email: 1, points: 1 } })
       .toArray();
 
     // Sort users by points in descending order and assign ranks
-    allUsers.sort((a, b) => b.points - a.points);
+    updatedUsers.sort((a, b) => b.points - a.points);
 
-    for (let rank = 0; rank < allUsers.length; rank++) {
+    for (let rank = 0; rank < updatedUsers.length; rank++) {
       await usersCollection.updateOne(
-        { email: allUsers[rank].email },
+        { email: updatedUsers[rank].email },
         { $set: { rank: rank + 1 } }
       );
     }
