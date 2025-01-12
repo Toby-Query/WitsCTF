@@ -1,6 +1,26 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 
+/**
+ * @swagger
+ * /api/problems:
+ *   get:
+ *     summary: Returns a list of all problems.
+ *     description: Returns a list of all problems from the database.
+ *     responses:
+ *       200:
+ *         description: A successful response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Hello World
+ *       500:
+ *          description: Internal Server Error
+ */
 export async function GET() {
   try {
     // Connect to the database

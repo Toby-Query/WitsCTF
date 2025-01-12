@@ -3,8 +3,8 @@ import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
 import ClientLayout from "./client-layout";
 import React from "react";
-import Head from "next/head";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +31,7 @@ export default function RootLayout({ children }) {
           <ClientLayout>{children}</ClientLayout>
         </AuthProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
