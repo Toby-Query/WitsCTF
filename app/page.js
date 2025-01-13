@@ -12,7 +12,7 @@ export default function Home() {
   const [ctfData, setCtfData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [selectedProblem, setSelectedProblem] = useState(null);
-  const [filter, setFilter] = useState("all"); // Default filter
+  const [filter, setFilter] = useState("All"); // Default filter
   // const [searchQuery, setSearchQuery] = useState(""); // Search query state
   const { searchQuery } = useSearch(); // Use search query from context
 
@@ -53,10 +53,10 @@ export default function Home() {
     let filtered = [...ctfData];
 
     // Filter based on category
-    if (filter !== "all") {
+    if (filter !== "All") {
       filtered = filtered.filter((problem) => {
-        if (filter === "solved") return problem.solved;
-        if (filter === "unsolved") return !problem.solved;
+        if (filter === "Solved") return problem.solved;
+        if (filter === "Unsolved") return !problem.solved;
         return problem.tag === filter;
       });
     }
@@ -77,7 +77,7 @@ export default function Home() {
     <>
       <div className="p-8 sm:p-16">
         <h1 className="text-3xl font-bold mb-8 text-center">
-          Capture the Flag Events
+          {filter} Problems
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">

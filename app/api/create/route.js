@@ -64,7 +64,6 @@ export async function POST(request) {
       description,
       link,
       flag,
-      points,
       createdAt: new Date(),
       updatedAt: new Date(),
       solves: 0,

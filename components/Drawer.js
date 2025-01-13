@@ -30,7 +30,7 @@ const Drawer = ({ onFilterChange }) => {
           ></label>
           <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
             {/* Sidebar content */}
-            <li>
+            {/* <li>
               <a
                 onClick={() => {
                   router.push("/leaderboard");
@@ -39,15 +39,15 @@ const Drawer = ({ onFilterChange }) => {
               >
                 Leaderboard
               </a>
+            </li> */}
+            <li>
+              <a onClick={() => handleFilterChange("Unsolved")}>Unsolved</a>
             </li>
             <li>
-              <a onClick={() => handleFilterChange("unsolved")}>Unsolved</a>
+              <a onClick={() => handleFilterChange("Solved")}>Solved</a>
             </li>
             <li>
-              <a onClick={() => handleFilterChange("solved")}>Solved</a>
-            </li>
-            <li>
-              <a onClick={() => handleFilterChange("all")}>All</a>
+              <a onClick={() => handleFilterChange("All")}>All</a>
             </li>
             <li>
               <a onClick={() => handleFilterChange("Cryptography")}>

@@ -106,17 +106,34 @@ const Navbar = () => {
           >
             <li>
               <a
-                onClick={() => handleButtonClick("/profile")}
+                onClick={() => {
+                  handleButtonClick("/profile");
+                  setIsOpen(false);
+                }}
                 className="justify-between"
               >
                 Profile
                 {/* <span className="badge">New</span> */}
               </a>
             </li>
+            <li>
+              <a
+                onClick={() => {
+                  handleButtonClick("/leaderboard");
+                  setIsOpen(false);
+                }}
+                className="justify-between"
+              >
+                Leaderboard
+              </a>
+            </li>
             {isAdmin && (
               <li>
                 <a
-                  onClick={() => handleButtonClick("/create")}
+                  onClick={() => {
+                    handleButtonClick("/create");
+                    setIsOpen(false);
+                  }}
                   className="justify-between"
                 >
                   Create
