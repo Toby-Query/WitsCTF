@@ -20,6 +20,14 @@ import { NextResponse } from "next/server";
  *                   example: Hello World
  *       500:
  *          description: Internal Server Error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  error:
+ *                    type: string
+ *                    example: Failed to fetch
  */
 export async function GET() {
   try {

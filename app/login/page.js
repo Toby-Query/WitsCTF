@@ -13,8 +13,10 @@ const Login = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
+  console.log("outside session", session);
   useEffect(() => {
     if (session) {
+      console.log("inside session", session);
       // Redirect to home after successful login
       router.push("/");
     }
