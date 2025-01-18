@@ -158,3 +158,70 @@ async function recalculatePoints(db) {
 }
 
 export { handler as GET, handler as POST };
+
+/**
+ * @swagger
+ * /api/auth/[...nextauth]:
+ *   post:
+ *     summary: Google Authentication for sign-in and registration.
+ *     description: Authenticates a user using Google OAuth, registers the user if they don't exist, and calculates dynamic scores and ranks.
+ *     tags:
+ *      - Authentication
+ *     responses:
+ *       200:
+ *         description: User authenticated or registered successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "User authenticated or registered successfully"
+ *       401:
+ *         description: User's email doesn't meet the required domain or they are not authenticated.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: User not authenticated or Email domain not allowed
+ *       500:
+ *         description: Internal server error during authentication process.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Internal server error"
+ *   get:
+ *     summary: Google Authentication callback.
+ *     description: This endpoint handles the callback from Google after successful authentication.
+ *     tags:
+ *      - Authentication
+ *     responses:
+ *       200:
+ *         description: Redirect to the authenticated session or homepage.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Redirect to authenticated session or homepage"
+ *       500:
+ *         description: Internal server error during callback processing.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Internal server error"
+ */

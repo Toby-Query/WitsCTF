@@ -53,3 +53,111 @@ export async function POST(request) {
     });
   }
 }
+
+/**
+ * @swagger
+ * /api/profile:
+ *   get:
+ *     summary: Get user profile
+ *     description: Retrieves the profile information of the currently authenticated user.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: [] # Adjust based on your authentication method
+ *     responses:
+ *       200:
+ *         description: User profile retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   example: "6782c30a4d81c6f251740b8f"
+ *                 email:
+ *                   type: string
+ *                   example: "user@example.com"
+ *                 name:
+ *                   type: string
+ *                   example: "John Doe"
+ *                 role:
+ *                   type: string
+ *                   example: "admin"
+ *       401:
+ *         description: Unauthorized access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Unauthorized"
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "User not found"
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Database connection failed"
+ *   post:
+ *     summary: Update user profile
+ *     description: Updates the profile information of the currently authenticated user.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: [] # Adjust based on your authentication method
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Jane Doe"
+ *               role:
+ *                 type: string
+ *                 example: "user"
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Profile updated successfully"
+ *       401:
+ *         description: Unauthorized access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Unauthorized"
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "User not found"
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Database connection failed"
+ */

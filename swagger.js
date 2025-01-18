@@ -4,7 +4,7 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "My API",
+      title: "WitsCTF API Docs",
       version: "1.0.0",
     },
   },

@@ -151,3 +151,77 @@ export async function POST(request) {
     });
   }
 }
+
+/**
+ * @swagger
+ * /api/submit-flag:
+ *   post:
+ *     summary: Submit a flag for a problem and update scores and ranks.
+ *     description: This endpoint verifies a submitted flag for a problem, updates the problem's solve count and points, and recalculates user ranks and scores dynamically.
+ *     tags:
+ *        - Flag Submission
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               problemName:
+ *                 type: string
+ *                 example: "Welcome to WitsCTF"
+ *               submittedFlag:
+ *                 type: string
+ *                 example: "CTF{correct_flag}"
+ *     responses:
+ *       200:
+ *         description: Flag verified, and scores updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Flag correct! Problem points and user ranks updated."
+ *       400:
+ *         description: Bad request due to missing fields or problem already solved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Missing required fields"
+ *       401:
+ *         description: Unauthorized access or incorrect flag.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "User not authenticated"
+ *       404:
+ *         description: Resource not found (problem or user).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Problem not found"
+ *       500:
+ *         description: Internal server error during processing.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ */

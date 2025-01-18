@@ -24,3 +24,45 @@ export async function GET() {
     );
   }
 }
+
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Fetch all users sorted by rank.
+ *     description: Retrieves a list of all users, sorted by their rank in ascending order.
+ *     tags:
+ *      - Users
+ *     responses:
+ *       200:
+ *         description: A list of users sorted by rank.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   email:
+ *                     type: string
+ *                     example: "user@example.com"
+ *                   name:
+ *                     type: string
+ *                     example: "John Doe"
+ *                   rank:
+ *                     type: integer
+ *                     example: 5
+ *                   points:
+ *                     type: integer
+ *                     example: 1200
+ *       500:
+ *         description: Internal server error when fetching users.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Failed to fetch users"
+ */
