@@ -13,7 +13,13 @@ export async function GET() {
       .toArray();
 
     // Return the fetched problems as JSON
-    return NextResponse.json(problems, { status: 200 });
+    // Set CORS headers
+    const response = NextResponse.json(problems, { status: 200 });
+    response.headers.set("Access-Control-Allow-Origin", "*"); // Allow all origins
+    response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
+    response.headers.set("Access-Control-Allow-Headers", "Content-Type");
+
+    return response;
   } catch (error) {
     console.error("Error fetching problems:", error);
     return NextResponse.json(
