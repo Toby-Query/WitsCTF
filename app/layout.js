@@ -5,6 +5,7 @@ import ClientLayout from "./client-layout";
 import React from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import ServiceWorkerRegister from "./service-worker-component";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,9 +25,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+    <head>
+      <link rel="manifest" href="/manifest.json" />
+      <meta name="theme-color" content="#0070f3" />
+      <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+    </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <ServiceWorkerRegister />
         <AuthProvider>
           <ClientLayout>{children}</ClientLayout>
         </AuthProvider>
